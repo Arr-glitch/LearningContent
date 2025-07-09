@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Interactive English Learning</title>
+    <link rel="stylesheet" href="./assets/styles.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+        
+        .progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+        
+        .progress-ring .background {
+            stroke: rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-ring .progress {
+            stroke: #fbbf24;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.5s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .achievement-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .achievement-item.earned {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+        
+        .achievement-item.locked {
+            opacity: 0.5;
+        }
+        
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .achievement-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .achievement-points {
+            font-size: 0.8rem;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+        
+        .streak-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+            margin-top: 1rem;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .calendar-day.studied {
+            background: #22c55e;
+        }
+        
+        .calendar-day.today {
+            border: 2px solid #fbbf24;
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1rem;
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+        }
+        
+        .chart-bar {
+            background: linear-gradient(to top, #3b82f6, #1d4ed8);
+            border-radius: 0.25rem 0.25rem 0 0;
+            min-height: 10px;
+            width: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-bar:hover {
+            background: linear-gradient(to top, #2563eb, #1e40af);
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        
+        .recommendations-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .recommendation-item.improvement {
+            border-left-color: #ef4444;
+        }
+        
+        .recommendation-item.streak {
+            border-left-color: #f59e0b;
+        }
+        
+        .recommendation-item.progress {
+            border-left-color: #22c55e;
+        }
+        
+        .strengths-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .strength-tag {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22c55e;
+            border-radius: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .back-to-learning {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-learning:hover {
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .achievement-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="dashboard-container">
+            <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Your Learning Dashboard</h1>
+            
+            <!-- Overview Stats -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>Overall Progress</h2>
+                    <div class="progress-ring">
+                        <svg>
+                            <circle class="background" cx="60" cy="60" r="52"></circle>
+                            <circle class="progress" cx="60" cy="60" r="52" id="overall-progress"></circle>
+                        </svg>
+                        <div class="progress-text" id="overall-percentage">0%</div>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-score">0</span>
+                            <span class="stat-label">Total Score</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="accuracy-rate">0%</span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="chapters-done">0</span>
+                            <span class="stat-label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="study-time">0h</span>
+                            <span class="stat-label">Study Time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h2>Study Streak</h2>
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <span style="font-size: 3rem;">🔥</span>
+                        <div style="font-size: 2rem; font-weight: bold; color: #fbbf24;" id="streak-count">0</div>
+                        <div style="opacity: 0.8;">days in a row</div>
+                    </div>
+                    <div class="streak-calendar" id="streak-calendar">
+                        <!-- Calendar will be generated dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Achievements -->
+            <div class="dashboard-card">
+                <h2>Achievements</h2>
+                <div class="achievement-grid" id="achievements-grid">
+                    <!-- Achievements will be loaded dynamically -->
+                </div>
+            </div>
+            
+            <!-- Performance Analytics -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>Weekly Progress</h2>
+                    <div class="chart-container" id="weekly-chart">
+                        <!-- Chart bars will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h2>Question Type Performance</h2>
+                    <div id="question-types-chart">
+                        <!-- Question type performance will be shown here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Strengths and Recommendations -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>Your Strengths</h2>
+                    <div class="strengths-list" id="strengths-list">
+                        <!-- Strengths will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h2>Recommendations</h2>
+                    <ul class="recommendations-list" id="recommendations-list">
+                        <!-- Recommendations will be loaded dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back to Learning Button -->
+        <button class="back-to-learning" onclick="window.location.href='index.html'" title="Back to Learning">
+            📚
+        </button>
+    </div>
+    
+    <script type="module" src="./dashboard-script.js"></script>
+</body>
+</html>
+

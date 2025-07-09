@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Interactive English Learning</title>
+    <link rel="stylesheet" href="./assets/styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .admin-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .question-builder {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .question-type-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .type-option {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .type-option.active {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+        }
+        
+        .options-list {
+            display: none;
+        }
+        
+        .options-list.show {
+            display: block;
+        }
+        
+        .option-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+        
+        .option-input input {
+            flex: 1;
+        }
+        
+        .remove-option {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .user-email {
+            font-weight: 600;
+        }
+        
+        .user-stats {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .promote-btn {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .demote-btn {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .ban-btn {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="admin-container">
+            <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Admin Panel</h1>
+            
+            <!-- Authentication Check -->
+            <div id="auth-check" class="admin-section">
+                <h2>Authentication Required</h2>
+                <p>Please log in with admin credentials to access the admin panel.</p>
+                <button class="btn primary" id="admin-login">Login as Admin</button>
+            </div>
+            
+            <!-- Main Admin Content -->
+            <div id="admin-content" style="display: none;">
+                
+                <!-- Statistics Dashboard -->
+                <div class="admin-section">
+                    <h2>Dashboard Statistics</h2>
+                    <div class="admin-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-users">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-chapters">0</div>
+                            <div class="stat-label">Total Chapters</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-questions">0</div>
+                            <div class="stat-label">Total Questions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avg-completion">0%</div>
+                            <div class="stat-label">Avg. Completion Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Management -->
+                <div class="admin-section">
+                    <h2>Content Management</h2>
+                    
+                    <div class="action-buttons" style="margin-bottom: 2rem;">
+                        <button class="btn primary" id="add-chapter-btn">Add New Chapter</button>
+                        <button class="btn" id="import-content-btn">Import Content</button>
+                        <button class="btn" id="export-content-btn">Export Content</button>
+                        <button class="btn success" id="upload-sample-btn">Upload Sample Content</button>
+                    </div>
+                    
+                    <!-- Chapter Form -->
+                    <div id="chapter-form" style="display: none;">
+                        <h3>Add New Chapter</h3>
+                        <form id="new-chapter-form">
+                            <div class="form-group">
+                                <label for="chapter-title">Chapter Title</label>
+                                <input type="text" id="chapter-title" placeholder="e.g., Chapter 6: Advanced Writing" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="chapter-lesson">Lesson Content</label>
+                                <textarea id="chapter-lesson" placeholder="Main lesson content..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="chapter-explanation">Explanation</label>
+                                <textarea id="chapter-explanation" placeholder="Detailed explanation..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="chapter-examples">Examples (one per line)</label>
+                                <textarea id="chapter-examples" placeholder="Example 1&#10;Example 2&#10;Example 3"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="chapter-difficulty">Difficulty Level</label>
+                                <select id="chapter-difficulty">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="estimated-time">Estimated Time (minutes)</label>
+                                <input type="number" id="estimated-time" min="5" max="120" value="30">
+                            </div>
+                            
+                            <!-- Questions Section -->
+                            <h4>Questions</h4>
+                            <div id="questions-container">
+                                <!-- Questions will be added dynamically -->
+                            </div>
+                            
+                            <button type="button" class="btn" id="add-question-btn">Add Question</button>
+                            
+                            <div class="action-buttons" style="margin-top: 2rem;">
+                                <button type="submit" class="btn success">Save Chapter</button>
+                                <button type="button" class="btn" id="cancel-chapter">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- User Management -->
+                <div class="admin-section">
+                    <h2>User Management</h2>
+                    
+                    <div class="action-buttons" style="margin-bottom: 1rem;">
+                        <button class="btn" id="refresh-users">Refresh Users</button>
+                        <button class="btn" id="export-users">Export User Data</button>
+                    </div>
+                    
+                    <div class="user-list" id="user-list">
+                        <!-- Users will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <!-- System Settings -->
+                <div class="admin-section">
+                    <h2>System Settings</h2>
+                    
+                    <div class="form-group">
+                        <label for="max-attempts">Maximum Question Attempts</label>
+                        <input type="number" id="max-attempts" min="1" max="10" value="3">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passing-score">Passing Score (%)</label>
+                        <input type="number" id="passing-score" min="0" max="100" value="70">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="allow-guest-access"> Allow Guest Access
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enable-analytics"> Enable Analytics
+                        </label>
+                    </div>
+                    
+                    <button class="btn primary" id="save-settings">Save Settings</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="./admin-script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,33 @@
+{
+  "name": "interactive-english-learning",
+  "version": "1.0.0",
+  "description": "An interactive English learning platform with Firebase integration",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "deploy": "firebase deploy",
+    "build": "echo 'No build step required for static site'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "english",
+    "learning",
+    "education",
+    "interactive",
+    "firebase",
+    "javascript"
+  ],
+  "author": "Interactive English Learning Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/interactive-english-learning.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/interactive-english-learning/issues"
+  },
+  "homepage": "https://username.github.io/interactive-english-learning/",
+  "devDependencies": {},
+  "dependencies": {}
+}
+
