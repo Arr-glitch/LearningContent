@@ -1100,7 +1100,7 @@ class LearningApp {
         }
     }
 
-    async register() {
+    async register() { 
         const email = document.getElementById('auth-email').value;
         const password = document.getElementById('auth-password').value;
         
