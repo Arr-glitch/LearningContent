@@ -1124,5 +1124,3 @@ class LearningApp {
 
 // Initialize the application
 window.app = new LearningApp();
-
-
