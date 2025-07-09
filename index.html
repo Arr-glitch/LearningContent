@@ -148,17 +148,16 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Authentication Modal (will be added via JavaScript) -->
-    <div id="auth-modal" style="display: none;"></div>
+        <!-- Authentication Modal (will be added via JavaScript) -->
+        <div id="auth-modal" style="display: none;"></div>
 
-    <!-- Firebase SDKs - Loaded as traditional scripts -->
-    <script src="./lib/firebase-app.js"></script>
-    <script src="./lib/firebase-auth.js"></script>
-    <script src="./lib/firebase-firestore.js"></script>
+        <!-- Firebase SDKs - Loaded from CDN as traditional scripts -->
+        <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
-    <!-- Your main application script - Loaded as a module -->
-    <script type="module" src="./assets/script.js"></script>
-</body>
-</html>
+        <!-- Your main application script - Loaded as a module -->
+        <script type="module" src="./assets/script.js"></script>
+    </body>
+    </html>
