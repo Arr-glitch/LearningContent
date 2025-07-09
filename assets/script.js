@@ -1,13 +1,13 @@
-import { initializeApp } from "../lib/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, setDoc, getDoc, updateDoc } from "../lib/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "../lib/firebase-auth.js";
+import { initializeApp } from "./lib/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, setDoc, updateDoc, getDoc } from "./lib/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "./lib/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
 import AnalyticsSystem from "../analytics.js";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Initialize Firebase (renamed to firebaseApp to avoid conflict with window.app)
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
 
 // User roles and privileges
 const USER_ROLES = {
@@ -262,6 +262,7 @@ class LearningApp {
                 ],
                 difficulty: "beginner",
                 isPremium: false,
+                order: 1,
                 questions: [
                     {
                         type: "multiple-choice",
@@ -292,6 +293,7 @@ class LearningApp {
                 ],
                 difficulty: "intermediate",
                 isPremium: false,
+                order: 2,
                 questions: [
                     {
                         type: "matching",
@@ -318,10 +320,11 @@ class LearningApp {
                 ],
                 difficulty: "advanced",
                 isPremium: true,
+                order: 3,
                 questions: [
                     {
                         type: "reading-passage",
-                        passage: "The library is a wonderful place to study and learn. It offers a quiet environment where students can focus on their work.",
+                        passage: "The library is a wonderful place to study and learn. It offers a quiet environment where students can focus on their work. Many resources, including books, journals, and digital archives, are available to help with research and academic pursuits. Librarians are always ready to assist visitors in finding the information they need.",
                         question: "What is the main idea of this passage?",
                         options: [
                             "Libraries have many books",
@@ -1120,8 +1123,6 @@ class LearningApp {
 }
 
 // Initialize the application
-const app = new LearningApp();
+window.app = new LearningApp();
 
-// Make app globally available for modal functions
-window.app = app;
 
